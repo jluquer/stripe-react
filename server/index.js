@@ -1,5 +1,5 @@
 import express from "express";
-import stripe from "stripe";
+import Stripe from "stripe";
 import cors from "cors";
 
 const app = express();
@@ -12,9 +12,23 @@ const stripe = new Stripe(
 app.use(cors({ origin: "http://localhost:5173" }));
 app.use(express.json());
 
-app.post("/api/checkout", (req, res) => {
+app.post("/api/checkout", async (req, res) => {
   console.log(req.body);
-  res.send("received");
+  try {
+    const { id, amount } = req.body;
+    const payment = await stripe.paymentIntents.create({
+      amount,
+      currency: "USD",
+      description: "Gamin Keyboard",
+      payment_method: id,
+      confirm: true,
+    });
+    console.log(payment);
+  
+    res.send({ message: "success" });
+  } catch (err) {
+    res.json({message: err.raw.message})
+  }
 });
 
 app.listen(port, () => {
