@@ -53,7 +53,7 @@ const CheckoutForm = () => {
         <CardElement className="form-control" />
       </div>
       <button className="btn btn-success" disabled={!stripe}>
-        {!loading ? (
+        {loading ? (
           <div className="spinner-border" role="status">
             <span className="visually-hidden">Loading...</span>
           </div>
